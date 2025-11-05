@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<<<<<<< HEAD
+    <meta charset="UTF-8">
+    <title>ثبت غذا - خوابگاه</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h1 class="text-center mb-4">🍽️ ثبت غذای امروز</h1>
+
+        <form action="/add" method="post" class="mb-4">
+            <div class="mb-3">
+                <label class="form-label">آورنده غذا:</label>
+                <input name="bringer" class="form-control" placeholder="مثلاً علی" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">کسانی که غذا خوردند:</label>
+                <input name="eaters" class="form-control" placeholder="مثلاً پارسا، رضا، مهدی">
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">ثبت اطلاعات</button>
+        </form>
+
+        <h4 class="mt-4">🍱 غذاهای امروز:</h4>
+        {% if today_entries %}
+        <ul class="list-group">
+            {% for entry in today_entries %}
+                <li class="list-group-item">
+                    <strong>{{ entry.bringer }}</strong> غذا آورده و 
+                    {{ entry.eaters | join("، ") }} خوردند.
+                </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <p class="text-muted">هنوز غذایی ثبت نشده.</p>
+        {% endif %}
+
+        <div class="text-center mt-4">
+            <a href="/stats" class="btn btn-outline-primary">مشاهده آمار ماهانه 📊</a>
+        </div>
+    </div>
+</div>
+
+=======
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🍽 سامانه وعده‌های خوابگاه</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background: linear-gradient(145deg, #e0eafc, #cfdef3);
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      color: #222;
+    }
+
+    header {
+      background-color: #007BFF;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.6rem;
+    }
+
+    main {
+      max-width: 500px;
+      margin: 25px auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+
+    form label {
+      font-weight: 600;
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 6px;
+    }
+
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 8px;
+      text-align: right;
+    }
+
+    .checkbox-group label {
+      background: #f9fafc;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .checkbox-group label:hover {
+      background: #eef5ff;
+      border-color: #007BFF;
+    }
+
+    input[type="submit"] {
+      width: 100%;
+      margin-top: 20px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 10px;
+      font-size: 1rem;
+      transition: 0.3s;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    .entries {
+      margin-top: 30px;
+    }
+
+    .entry {
+      background: #f8f9fc;
+      padding: 12px 15px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      border: 1px solid #e3e6f0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .entry b {
+      color: #007BFF;
+    }
+
+    .empty {
+      color: #777;
+      font-style: italic;
+    }
+
+    footer {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    footer a {
+      text-decoration: none;
+      background: #007BFF;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    footer a:hover {
+      background: #0056b3;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        margin: 15px;
+        padding: 15px;
+      }
+      header h1 {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🍛 ثبت وعده غذایی خوابگاه</h1>
+  </header>
+
+  <main>
+    <form action="{{ url_for('add_entry') }}" method="post">
+
+      <label>آورندگان غذا:</label>
+      <div class="checkbox-group">
+        {% for user in users %}
+          <label>
+            <input type="checkbox" name="bringers" value="{{ user }}">
+            {{ user }}
+          </label>
+        {% endfor %}
+      </div>
+
+      <label style="margin-top:20px;">افرادی که غذا خوردند:</label>
+      <div class="checkbox-group">
+        {% for user in users %}
+          <label>
+            <input type="checkbox" name="eaters" value="{{ user }}" checked>
+            {{ user }}
+          </label>
+        {% endfor %}
+      </div>
+
+      <input type="submit" value="🍴 ثبت وعده">
+    </form>
+
+    <div class="entries">
+      <h2>📅 وعده‌های امروز</h2>
+      {% if today_entries %}
+        {% for entry in today_entries %}
+          <div class="entry">
+            <b>تاریخ:</b> {{ entry.date }}<br>
+            <b>آورندگان:</b> {{ "، ".join(entry.bringers) }}<br>
+            <b>غذاخورها:</b>
+            {% if entry.eaters|length == users|length %}
+              همه اعضا
+            {% else %}
+              {{ "، ".join(entry.eaters) }}
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="empty">برای امروز هنوز وعده‌ای ثبت نشده است.</p>
+      {% endif %}
+    </div>
+  </main>
+
+  <footer>
+    <a href="{{ url_for('stats') }}">📊 مشاهده آمار</a>
+    <a href="{{ url_for('history') }}">📜 مشاهده تاریخچه</a>
+</footer>
+<footer style="text-align:center; font-size:0.8rem; color:#555; margin:20px 0;">
+  Developed by MParsa Ahmadi
+</footer>
+>>>>>>> 7524eec (final)
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📜 تاریخچه وعده‌ها</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background: linear-gradient(145deg, #e0eafc, #cfdef3);
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      color: #222;
+    }
+
+    header {
+      background-color: #007BFF;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.6rem;
+    }
+
+    main {
+      max-width: 600px;
+      margin: 25px auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+
+    .entry {
+      background: #f8f9fc;
+      padding: 12px 15px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      border: 1px solid #e3e6f0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .entry b {
+      color: #007BFF;
+    }
+
+    footer {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    footer a {
+      text-decoration: none;
+      background: #007BFF;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: bold;
+      transition: 0.3s;
+      margin: 0 5px;
+    }
+
+    footer a:hover {
+      background: #0056b3;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        margin: 15px;
+        padding: 15px;
+      }
+      header h1 {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📜 تاریخچه وعده‌های غذایی</h1>
+  </header>
+
+  <main>
+    {% if data %}
+      {% for entry in data %}
+        <div class="entry">
+          <b>تاریخ:</b> {{ entry.date }}<br>
+          <b>آورندگان:</b> {{ "، ".join(entry.bringers) }}<br>
+          <b>غذاخورها:</b>
+          {% if entry.eaters|length == users|length %}
+            همه اعضا
+          {% else %}
+            {{ "، ".join(entry.eaters) }}
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="empty">هنوز هیچ وعده‌ای ثبت نشده است.</p>
+    {% endif %}
+  </main>
+
+  <footer>
+    <a href="{{ url_for('index') }}">🏠 بازگشت به ثبت وعده</a>
+    <a href="{{ url_for('stats') }}">📊 مشاهده آمار</a>
+  </footer>
+</body>
+</html>
