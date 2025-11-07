@@ -1,65 +1,3 @@
-<<<<<<< HEAD
-from flask import Flask, render_template, request, redirect, url_for, jsonify
-import json
-import os
-from datetime import date
-
-app = Flask(__name__)
-
-DATA_FILE = "meals.json"
-
-# اگر فایل دیتا وجود نداشت، بسازش
-if not os.path.exists(DATA_FILE):
-    with open(DATA_FILE, "w") as f:
-        json.dump([], f)
-
-
-def load_data():
-    with open(DATA_FILE, "r") as f:
-        return json.load(f)
-
-
-def save_data(data):
-    with open(DATA_FILE, "w") as f:
-        json.dump(data, f, indent=4)
-
-
-@app.route("/")
-def index():
-    data = load_data()
-    today = date.today().isoformat()
-    today_entries = [entry for entry in data if entry["date"] == today]
-    return render_template("index.html", today_entries=today_entries)
-
-
-@app.route("/add", methods=["POST"])
-def add_entry():
-    bringer = request.form["bringer"]
-    eaters = request.form.getlist("eaters")
-
-    data = load_data()
-    data.append({
-        "date": date.today().isoformat(),
-        "bringer": bringer,
-        "eaters": eaters
-    })
-    save_data(data)
-    return redirect(url_for("index"))
-
-
-@app.route("/stats")
-def stats():
-    data = load_data()
-    bringer_count = {}
-    for entry in data:
-        bringer = entry["bringer"]
-        bringer_count[bringer] = bringer_count.get(bringer, 0) + 1
-    return render_template("stats.html", bringer_count=bringer_count)
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
-=======
 from flask import Flask, render_template, request, redirect, url_for
 import json, os
 from datetime import date
@@ -70,7 +8,6 @@ app = Flask(__name__)
 DATA_FILE = "meals.json"
 users = ["پارسا", "ابوالفضل", "محمدحسین", "سپهر"]
 
-# اگر فایل وجود نداشت، بسازش
 if not os.path.exists(DATA_FILE):
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump([], f, ensure_ascii=False, indent=4)
@@ -79,7 +16,6 @@ def load_data():
     try:
         with open(DATA_FILE, "r", encoding="utf-8") as f:
             data = json.load(f)
-            # بررسی صحت داده‌ها
             if not isinstance(data, list):
                 return []
             for entry in data:
@@ -125,16 +61,12 @@ def add_entry():
 @app.route("/history")
 def history():
     data = load_data()
-    # مرتب کردن داده‌ها بر اساس تاریخ به صورت نزولی
     data.sort(key=lambda x: x["date"], reverse=True)
     return render_template("history.html", data=data, users=users)
-
 
 @app.route("/stats")
 def stats():
     data = load_data()
-
-    # ماهانه دسته‌بندی می‌کنیم
     monthly_data = defaultdict(lambda: {"bring_count": defaultdict(int), "eat_count": defaultdict(int)})
 
     for entry in data:
@@ -146,7 +78,6 @@ def stats():
         for e in eaters:
             monthly_data[month]["eat_count"][e] += 1
 
-    # محاسبه کارآمدی کل هر فرد
     total_bring = defaultdict(int)
     total_eat = defaultdict(int)
     for month_vals in monthly_data.values():
@@ -163,4 +94,3 @@ def stats():
 
 if __name__ == "__main__":
     app.run(debug=True)
->>>>>>> 7524eec (final)
